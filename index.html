@@ -288,43 +288,6 @@ canvas#bg{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none
 
   <div class="divider fade-section"><div class="div-line"></div><div class="div-dot"></div><div class="div-line"></div></div>
 
-  <!-- VOICE NOTE -->
-  <div class="fade-section">
-    <div class="section-head">
-      <p class="section-tag">A message</p>
-      <h2 class="section-title">In my own words</h2>
-    </div>
-    <div class="audio-box">
-      <div class="audio-play-btn" onclick="toggleAudio()">
-        <svg id="audioIcon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:3px;">
-          <polygon points="5 3 19 12 5 21 5 3"></polygon>
-        </svg>
-      </div>
-      <div class="audio-info">
-        <p>A message from me, for you</p>
-        <span>Voice note, recorded just for your birthday</span>
-        <div class="audio-progress"><div class="audio-progress-fill" id="audioFill"></div></div>
-      </div>
-    </div>
-    <!--
-      VOICE NOTE FILE: this is the one piece that still needs a separate file, because audio is
-      too large to embed directly. Save your recording as "voice.mp3" and keep it in the SAME
-      FOLDER as this HTML file when you open or send it. The <audio> tag below already points
-      at it, so once the file is in place it will just work, no further edits needed.
-    -->
-    <audio id="realAudio" src="voice.mp3" preload="auto"></audio>
-    <div class="music-bar" style="margin-top:1rem;">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4a4030" stroke-width="1.5" stroke-linecap="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-      <p id="musicLabel">"James Newton Howard" · tap to play softly</p>
-      <a href="#" id="musicLink" onclick="toggleMusic(event)">play ✦</a>
-    </div>
-    <!--
-      BACKGROUND MUSIC FILE: like the voice note, this needs a separate file (audio can't be
-      embedded the way the photos were). Save the song as "music.mp3" and keep it in the SAME
-      FOLDER as this HTML file when you open or send it.
-    -->
-    <audio id="bgMusic" src="music.mp3" preload="auto" loop></audio>
-  </div>
 
   <!-- FOOTER -->
   <div class="page-footer fade-section">
@@ -517,55 +480,6 @@ function updateCD() {
   document.getElementById('cdS').textContent = pad((diff % 60000) / 1000);
 }
 updateCD(); setInterval(updateCD, 1000);
-
-/* ── VOICE NOTE AUDIO ── */
-const realAudio = document.getElementById('realAudio');
-let audioPlaying = false;
-function toggleAudio() {
-  if (!audioPlaying) {
-    realAudio.play().catch(() => {});
-  } else {
-    realAudio.pause();
-  }
-}
-realAudio.addEventListener('play', () => {
-  audioPlaying = true;
-  document.getElementById('audioIcon').innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
-});
-realAudio.addEventListener('pause', () => {
-  audioPlaying = false;
-  document.getElementById('audioIcon').innerHTML = '<polygon points="5 3 19 12 5 21 5 3"></polygon>';
-});
-realAudio.addEventListener('ended', () => {
-  document.getElementById('audioFill').style.width = '0%';
-});
-realAudio.addEventListener('timeupdate', () => {
-  if (realAudio.duration) {
-    document.getElementById('audioFill').style.width = (realAudio.currentTime / realAudio.duration * 100) + '%';
-  }
-});
-
-/* ── BACKGROUND MUSIC ── */
-const bgMusic = document.getElementById('bgMusic');
-let musicPlaying = false;
-function toggleMusic(e) {
-  if (e) e.preventDefault();
-  if (!musicPlaying) {
-    bgMusic.play().then(() => {
-      musicPlaying = true;
-      document.getElementById('musicLink').textContent = 'pause ✦';
-    }).catch(() => {
-      document.getElementById('musicLabel').textContent = 'music.mp3 not found, add it next to this HTML file';
-    });
-  } else {
-    bgMusic.pause();
-    musicPlaying = false;
-    document.getElementById('musicLink').textContent = 'play ✦';
-  }
-}
-bgMusic.addEventListener('error', () => {
-  document.getElementById('musicLabel').textContent = 'music.mp3 not found, add it next to this HTML file';
-});
 
 /* ── CANVAS: FIREFLIES + GOLD PETALS ── */
 const canvas = document.getElementById('bg');
